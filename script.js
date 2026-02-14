@@ -43,6 +43,9 @@
   let revealed = false;
   let audioCtx = null;
 
+  // Preload background image
+  new Image().src = 'valentine2.jpg';
+
   // Sheet note spans (excluding separators)
   const sheetEl = document.getElementById('sheet');
   const sheetNotes = Array.from(sheetEl.querySelectorAll('span:not(.sep)'));
