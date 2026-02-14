@@ -31,10 +31,19 @@
     { name: 'C6',  freq: 1046.50, black: false },
   ];
 
-  const SECRET = ['C4', 'D4', 'E4', 'F4'];
-  const history = [];
+  const SECRET = [
+    'D5', 'E5', 'F5', 'G5', 'A5', 'G5', 'F5', 'A5',
+    'C5', 'A5', 'G5', 'F5', 'A5',
+    'F5', 'F5', 'G5', 'G5',
+    'C5', 'C5', 'D5', 'D5',
+  ];
+  let secretIndex = 0;
   let revealed = false;
   let audioCtx = null;
+
+  // Sheet note spans (excluding separators)
+  const sheetEl = document.getElementById('sheet');
+  const sheetNotes = Array.from(sheetEl.querySelectorAll('span:not(.sep)'));
 
   // ── Build piano keys ──
   const pianoEl = document.getElementById('piano');
@@ -126,13 +135,21 @@
   // ── Sequence detection ──
   function checkSequence(noteName) {
     if (revealed) return;
-    history.push(noteName);
-    if (history.length > SECRET.length) {
-      history.shift();
-    }
-    if (history.length === SECRET.length &&
-        history.every((n, i) => n === SECRET[i])) {
-      triggerReveal();
+    if (noteName === SECRET[secretIndex]) {
+      sheetNotes[secretIndex].classList.add('played');
+      secretIndex++;
+      if (secretIndex === SECRET.length) {
+        triggerReveal();
+      }
+    } else {
+      // Reset on wrong note
+      sheetNotes.forEach(s => s.classList.remove('played'));
+      secretIndex = 0;
+      // Check if this note matches the start
+      if (noteName === SECRET[0]) {
+        sheetNotes[0].classList.add('played');
+        secretIndex = 1;
+      }
     }
   }
 
@@ -143,12 +160,13 @@
     const reveal = document.getElementById('reveal');
 
     piano.style.opacity = '0';
+    sheetEl.style.opacity = '0';
 
     piano.addEventListener('transitionend', function handler() {
       piano.removeEventListener('transitionend', handler);
       piano.style.display = 'none';
+      sheetEl.style.display = 'none';
       reveal.style.display = 'flex';
-      // Force reflow so the transition fires
       void reveal.offsetWidth;
       reveal.classList.add('visible');
     });

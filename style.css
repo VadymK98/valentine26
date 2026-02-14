@@ -54,9 +54,39 @@ html, body {
   #rotate-overlay {
     display: flex;
   }
-  #piano, #reveal {
+  #piano, #reveal, #sheet {
     display: none !important;
   }
+}
+
+/* ── Sheet Music ── */
+#sheet {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100vw;
+  height: 10dvh;
+  background: #1a1a1a;
+  color: #ccc;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  transition: opacity 2s ease;
+}
+
+#sheet span {
+  transition: color 0.15s;
+}
+
+#sheet span.played {
+  color: #d4a0d4;
+}
+
+#sheet span.sep {
+  color: #555;
+  margin: 0 0.3rem;
 }
 
 /* ── Piano ── */
@@ -64,7 +94,7 @@ html, body {
   position: relative;
   display: flex;
   width: 100vw;
-  height: 100dvh;
+  height: 90dvh;
   background: #1a1a1a;
   transition: opacity 2s ease;
 }
