@@ -31,13 +31,15 @@
     { name: 'C6',  freq: 1046.50, black: false },
   ];
 
-  const SECRET = [
-    'D5', 'E5', 'F5', 'G5', 'A5', 'G5', 'F5', 'A5',
-    'C5', 'A5', 'G5', 'F5', 'A5',
-    'F5', 'F5', 'G5', 'G5',
-    'C5', 'C5', 'D5', 'D5',
+  // Secret sequence as plain note letters — any octave (4 or 5) works
+  const SECRET_LETTERS = [
+    'D', 'E', 'F', 'G', 'A', 'G', 'F', 'A',
+    'C', 'A', 'G', 'F', 'A',
+    'F', 'F', 'G', 'G',
+    'C', 'C', 'D', 'D',
   ];
   let secretIndex = 0;
+  let chosenOctave = null; // locked on first correct note
   let revealed = false;
   let audioCtx = null;
 
@@ -133,20 +135,51 @@
   }
 
   // ── Sequence detection ──
+  function resetSequence() {
+    sheetNotes.forEach(s => s.classList.remove('played'));
+    secretIndex = 0;
+    chosenOctave = null;
+  }
+
   function checkSequence(noteName) {
     if (revealed) return;
-    if (noteName === SECRET[secretIndex]) {
+    // Parse note letter and octave (e.g. "C#5" → letter "C#", octave "5")
+    const letter = noteName.replace(/\d+$/, '');
+    const octave = noteName.replace(/^[A-G]#?/, '');
+
+    // Only accept octaves 4 and 5
+    if (octave !== '4' && octave !== '5') {
+      resetSequence();
+      return;
+    }
+
+    // Lock octave on first note, reset if switched
+    if (chosenOctave === null) {
+      if (letter === SECRET_LETTERS[0]) {
+        chosenOctave = octave;
+      }
+    } else if (octave !== chosenOctave) {
+      resetSequence();
+      // Check if this note starts a new sequence
+      if (letter === SECRET_LETTERS[0]) {
+        chosenOctave = octave;
+        sheetNotes[0].classList.add('played');
+        secretIndex = 1;
+      }
+      return;
+    }
+
+    if (letter === SECRET_LETTERS[secretIndex]) {
       sheetNotes[secretIndex].classList.add('played');
       secretIndex++;
-      if (secretIndex === SECRET.length) {
+      if (secretIndex === SECRET_LETTERS.length) {
         triggerReveal();
       }
     } else {
-      // Reset on wrong note
-      sheetNotes.forEach(s => s.classList.remove('played'));
-      secretIndex = 0;
-      // Check if this note matches the start
-      if (noteName === SECRET[0]) {
+      resetSequence();
+      // Check if this note starts a new sequence
+      if (letter === SECRET_LETTERS[0] && (octave === '4' || octave === '5')) {
+        chosenOctave = octave;
         sheetNotes[0].classList.add('played');
         secretIndex = 1;
       }
