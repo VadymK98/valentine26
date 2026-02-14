@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #111;
+  font-family: 'Playfair Display', serif;
+}
+
+/* ── Rotate Overlay ── */
+#rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #111;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotate-content {
+  text-align: center;
+}
+
+.rotate-icon {
+  color: #ccc;
+  margin-bottom: 1.5rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-30deg); }
+  75% { transform: rotate(30deg); }
+}
+
+.rotate-content p {
+  font-size: 1.2rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+@media (orientation: portrait) {
+  #rotate-overlay {
+    display: flex;
+  }
+  #piano, #reveal {
+    display: none !important;
+  }
+}
+
+/* ── Piano ── */
+#piano {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #1a1a1a;
+  transition: opacity 2s ease;
+}
+
+.key {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(to bottom, #f8f8f8, #fff);
+  border: 1px solid #bbb;
+  border-radius: 0 0 6px 6px;
+  cursor: pointer;
+  z-index: 1;
+  transition: background 0.08s;
+}
+
+.key:active,
+.key.active {
+  background: linear-gradient(to bottom, #e8d4e8, #f0ddf0);
+}
+
+.key.black {
+  position: absolute;
+  top: 0;
+  width: 3.2%;
+  height: 60%;
+  background: linear-gradient(to bottom, #222, #111);
+  border: 1px solid #000;
+  border-radius: 0 0 4px 4px;
+  z-index: 2;
+  flex: none;
+}
+
+.key.black:active,
+.key.black.active {
+  background: linear-gradient(to bottom, #5a3a5a, #3d1f3d);
+}
+
+.key .label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #999;
+  pointer-events: none;
+}
+
+.key.black .label {
+  color: #666;
+  bottom: 6px;
+  font-size: 8px;
+}
+
+/* ── Reveal ── */
+#reveal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('valentine2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 2s ease;
+  z-index: 500;
+}
+
+#reveal.visible {
+  opacity: 1;
+}
+
+.reveal-text {
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  text-align: center;
+  padding: 1.2rem 2rem;
+  font-size: 1.6rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.top-text {
+  margin-top: 2rem;
+}
+
+.bottom-text {
+  margin-bottom: 2rem;
+}
