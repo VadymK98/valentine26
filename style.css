@@ -64,7 +64,7 @@ html, body {
   position: relative;
   display: flex;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background: #1a1a1a;
   transition: opacity 2s ease;
 }
@@ -124,7 +124,7 @@ html, body {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background-image: url('valentine2.jpg');
   background-size: auto 100%;
   background-position: center;
